@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Загрузка модели</title>
+
+    <style>
+        body {
+            font-family: sans-serif;
+            max-width: 600px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        button {
+            padding: 10px 20px;
+            cursor: pointer;
+        }
+
+        #preview-container {
+            width: 300px;
+            height: 200px;
+            background: #eee;
+            border: 1px solid #ccc;
+            position: relative;
+        }
+
+        #preview-container span {
+            display: block;
+            padding: 80px 0;
+            text-align: center;
+            color: #999;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Загрузить новую 3D модель</h1>
+
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+
+        <div class="form-group">
+            {{ form.as_p }}
+        </div>
+
+        <!-- ===== БЛОК ПРЕВЬЮ ===== -->
+        <div style="margin-bottom: 20px;">
+            <p><strong>Авто-генерация превью:</strong></p>
+
+            <!-- Сюда JS вставит Canvas -->
+            <div id="preview-container">
+                <span>Выберите файл...</span>
+            </div>
+
+            <!-- Скрытое поле для base64 -->
+            <input type="hidden" name="image_data" id="id_image_data">
+        </div>
+
+        <!-- Кнопка заблокирована до генерации превью -->
+        <button type="submit" id="submit-btn" disabled>
+            Загрузить в базу
+        </button>
+    </form>
+
+    <br>
+    <a href="{% url 'home' %}">← Назад в галерею</a>
+
+    <!-- ===== THREE.JS ===== -->
+    {% load static %}
+
+    <script type="importmap">
+    {
+        "imports": {
+            "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
+            "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/"
+        }
+    }
+    </script>
+
+    <!-- Ваш JS-генератор -->
+    <script type="module" src="{% static 'gallery/js/autothumb.js' %}"></script>
+
+</body>
+</html>

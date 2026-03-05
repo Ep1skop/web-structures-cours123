@@ -1,0 +1,271 @@
+/* Базовый сброс и шрифт */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f5f5f5; /* Светло-серый фон */
+    margin: 0;
+    padding: 20px;
+}
+
+header {
+    margin-bottom: 40px;
+    text-align: center;
+}
+
+/* --- СЕТКА (GRID) --- */
+.gallery-grid {
+    display: grid;
+    /* Это магическая строка адаптивности:
+    Создавай столько колонок, сколько влезет (auto-fill).
+    Минимальная ширина колонки 280px.
+    Если места много - растягивай их (1fr). */
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 30px; /* Расстояние между карточками */
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* --- КАРТОЧКА (CARD) --- */
+.asset-card {
+    background: white;
+    border-radius: 12px;
+    overflow: hidden; /* Чтобы содержимое не вылезало за скругленные углы */
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1); /* Легкая тень */
+    transition: transform 0.2s;
+}
+
+.asset-card:hover {
+    transform: translateY(-5px); /* При наведении карточка чуть взлетает */
+}
+
+/* Место для будущего 3D-вьювера или скриншота */
+.card-preview {
+    height: 200px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+    background: radial-gradient(circle, #ffffff, #e0e0e0);
+}
+
+.card-info {
+    padding: 20px;
+}
+
+.card-title {
+    margin: 0 0 10px 0;
+    font-size: 1.2rem;
+    color: #333;
+}
+
+.card-meta {
+    font-size: 0.9rem;
+    color: #777;
+    margin-bottom: 15px;
+}
+
+/* Кнопка */
+.btn {
+    display: inline-block;
+    text-decoration: none;
+    background-color: #007bff;
+    color: white;
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-size: 0.9rem;
+}
+
+.btn:hover {
+    background-color: #0056b3;
+}
+
+
+/* Делаем контейнер relative, чтобы позиционировать кнопку Play по центру */
+.card-preview {
+position: relative;
+cursor: pointer;
+background-size: cover;
+background-position: center;
+}
+/* Сам экран загрузки (поверх 3D) */
+.loader-overlay {
+position: absolute;
+top: 0; left: 0; right: 0; bottom: 0;
+background: rgba(255, 255, 255, 0.9); /* Полупрозрачный белый */
+display: flex;
+flex-direction: column;
+align-items: center;
+justify-content: center;
+z-index: 10;
+transition: opacity 0.3s; /* Плавное исчезновение */
+}
+/* Полоска прогресса (фон) */
+.progress-bar {
+width: 60%;
+height: 6px;
+background: #e0e0e0;
+border-radius: 3px;
+overflow: hidden;
+margin-top: 10px;
+}
+/* Полоска прогресса (заполнение) */
+.progress-fill {
+width: 0%; /* Будем менять это через JS */
+height: 100%;
+background-color: #007bff; /* Синий цвет */
+transition: width 0.1s;
+}
+.error-msg {
+color: #dc3545;
+text-align: center;
+padding: 20px;
+}
+
+
+/* Затемнение картинки при наведении */
+.card-preview:hover::after {
+content: '';
+position: relative;
+top: 0; left: 0; right: 0; bottom: 0;
+background: rgba(0,0,0,0.1);
+}
+
+/* Кнопка Play */
+.play-btn {
+position: absolute;
+top: 50%;
+left: 50%;
+transform: translate(-50%, -50%); /* Точная центровка */
+width: 60px;
+height: 60px;
+background: rgba(0, 0, 0, 0.6);
+border-radius: 50%;
+border: 2px solid white;
+color: white;
+font-size: 24px;
+display: flex;
+align-items: center;
+justify-content: center;
+transition: transform 0.2s, background 0.2s;
+z-index: 5; /* Чтобы была поверх картинки */
+}
+
+/* Эффект нажатия */
+.card-preview:hover .play-btn {
+background: rgba(0, 123, 255, 0.8); /* Синий при наведении */
+transform: translate(-50%, -50%) scale(1.1);
+}
+/* ===============================
+   ПАНЕЛЬ ПОИСКА И СОРТИРОВКИ
+================================ */
+
+.toolbar {
+    background: white;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    margin: 0 auto 30px;
+    max-width: 1200px;
+    display: flex;
+    gap: 15px;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.search-input {
+    flex-grow: 1;
+    padding: 10px 15px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 1rem;
+}
+
+.sort-select {
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    background: white;
+    cursor: pointer;
+}
+
+.search-btn {
+    padding: 10px 25px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 1rem;
+    cursor: pointer;
+}
+
+.search-btn:hover {
+    background-color: #0056b3;
+}
+
+.reset-link {
+    color: #dc3545;
+    text-decoration: none;
+    font-size: 0.9rem;
+}
+/* ===== ПАГИНАЦИЯ ===== */
+.pagination {
+    margin-top: 40px;
+    text-align: center;
+    padding: 20px;
+}
+
+.pagination a {
+    display: inline-block;
+    padding: 8px 16px;
+    margin: 0 5px;
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    text-decoration: none;
+    color: #333;
+}
+
+.pagination a:hover {
+    background: #f0f0f0;
+}
+
+.pagination .current {
+    font-weight: bold;
+    margin: 0 10px;
+}
+
+/* ===== УВЕДОМЛЕНИЯ ===== */
+.messages-container {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 1000;
+    width: 300px;
+}
+
+.alert {
+    padding: 15px;
+    margin-bottom: 10px;
+    border-radius: 4px;
+    color: white;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    animation: slideIn 0.5s ease-out;
+}
+
+.alert.success { background-color: #28a745; }
+.alert.error { background-color: #dc3545; }
+.alert.warning { background-color: #ffc107; color: black; }
+
+@keyframes slideIn {
+    from { transform: translateX(100%); opacity: 0; }
+    to { transform: translateX(0); opacity: 1; }
+}
+
+/* ===== ОБРЕЗКА ДЛИННЫХ НАЗВАНИЙ ===== */
+.card-title {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+
