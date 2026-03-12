@@ -1,89 +1,120 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-    <meta charset="UTF-8">
-    <title>Загрузка модели</title>
+<meta charset="UTF-8">
+<title>Загрузка модели</title>
 
-    <style>
-        body {
-            font-family: sans-serif;
-            max-width: 600px;
-            margin: 2rem auto;
-            padding: 0 1rem;
-        }
+{% load static %}
 
-        .form-group {
-            margin-bottom: 1rem;
-        }
+<link rel="stylesheet" href="{% static 'gallery/style.css' %}">
 
-        button {
-            padding: 10px 20px;
-            cursor: pointer;
-        }
-
-        #preview-container {
-            width: 300px;
-            height: 200px;
-            background: #eee;
-            border: 1px solid #ccc;
-            position: relative;
-        }
-
-        #preview-container span {
-            display: block;
-            padding: 80px 0;
-            text-align: center;
-            color: #999;
-        }
-    </style>
 </head>
 
 <body>
-    <h1>Загрузить новую 3D модель</h1>
 
-    <form method="post" enctype="multipart/form-data">
-        {% csrf_token %}
+<header class="main-header">
 
-        <div class="form-group">
-            {{ form.as_p }}
-        </div>
+<div class="header-left">
+<img src="{% static 'gallery/Screenshot_2.jpg' %}" class="logo">
+<span class="logo-text">SibSutiZ 3D</span>
+</div>
 
-        <!-- ===== БЛОК ПРЕВЬЮ ===== -->
-        <div style="margin-bottom: 20px;">
-            <p><strong>Авто-генерация превью:</strong></p>
+<nav class="header-nav">
+<a href="{% url 'home' %}">Галерея</a>
+<a href="{% url 'about' %}">О нас</a>
+</nav>
 
-            <!-- Сюда JS вставит Canvas -->
-            <div id="preview-container">
-                <span>Выберите файл...</span>
-            </div>
+</header>
 
-            <!-- Скрытое поле для base64 -->
-            <input type="hidden" name="image_data" id="id_image_data">
-        </div>
 
-        <!-- Кнопка заблокирована до генерации превью -->
-        <button type="submit" id="submit-btn" disabled>
-            Загрузить в базу
-        </button>
-    </form>
+<div class="upload-wrapper">
 
-    <br>
-    <a href="{% url 'home' %}">← Назад в галерею</a>
+<div class="upload-card">
 
-    <!-- ===== THREE.JS ===== -->
-    {% load static %}
+<h2 class="upload-title">📦 Загрузить новую 3D модель</h2>
 
-    <script type="importmap">
-    {
-        "imports": {
-            "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
-            "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/"
+<form method="post" enctype="multipart/form-data">
+{% csrf_token %}
+
+<div class="form-group">
+{{ form.title.label_tag }}
+{{ form.title }}
+</div>
+
+<div class="form-group">
+{{ form.file.label_tag }}
+{{ form.file }}
+
+<div id="file-error" class="error-msg" style="display:none;">
+Можно загружать только .glb или .gltf
+</div>
+
+</div>
+
+<p><strong>Превью модели</strong></p>
+
+<div id="preview-container">
+<span>Выберите файл чтобы сгенерировать превью</span>
+</div>
+
+<input type="hidden" name="image_data" id="id_image_data">
+
+<button type="submit" id="submit-btn" class="upload-btn-submit" disabled>
+🚀 Загрузить модель
+</button>
+
+</form>
+
+<a href="{% url 'home' %}" class="back-link">
+← Вернуться в галерею
+</a>
+
+</div>
+</div>
+
+
+<script type="importmap">
+{
+"imports": {
+"three": "https://unpkg.com/three@0.160.0/build/three.module.js",
+"three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/"
+}
+}
+</script>
+
+<script type="module" src="{% static 'gallery/js/autothumb.js' %}"></script>
+
+<script>
+
+document.addEventListener("DOMContentLoaded", function(){
+
+    const fileInput = document.getElementById("id_file");
+    const errorBox = document.getElementById("file-error");
+    const submitBtn = document.getElementById("submit-btn");
+
+    const allowed = [".glb", ".gltf"];
+
+    fileInput.addEventListener("change", function(){
+
+        const file = this.files[0];
+
+        if(!file) return;
+
+        const ext = file.name.substring(file.name.lastIndexOf(".")).toLowerCase();
+
+        if(!allowed.includes(ext)){
+            errorBox.style.display = "block";
+            submitBtn.disabled = true;
+        } else {
+            errorBox.style.display = "none";
+            submitBtn.disabled = false;
         }
-    }
-    </script>
 
-    <!-- Ваш JS-генератор -->
-    <script type="module" src="{% static 'gallery/js/autothumb.js' %}"></script>
+    });
+
+});
+
+</script>
 
 </body>
 </html>

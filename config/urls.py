@@ -15,18 +15,20 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, re_path
 from django.conf import settings
-from django.conf.urls.static import static
-# Импортируем нашу функцию из приложения gallery
-from gallery.views import home, about, upload
+from django.views.static import serve
+
+from gallery.views import home, about, upload, download_asset
+
 urlpatterns = [
     path('admin/', admin.site.urls),
-    # Пустая строка '' означает главную страницу сайта (http://localhost:8000/)
-    path('', home, name='home'),  
+    path('', home, name='home'),
     path('about/', about, name='about'),
     path('upload/', upload, name='upload'),
-
+    path('download/<int:asset_id>/', download_asset, name='download_asset'),
+    # раздача media файлов (работает даже если DEBUG=False)
+    re_path(r'^media/(?P<path>.*)$', serve, {
+        'document_root': settings.MEDIA_ROOT,
+    }),
 ]
-if settings.DEBUG:
-    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -1,43 +1,163 @@
-/* Базовый сброс и шрифт */
+/* ============================== */
+/*         БАЗОВЫЕ СТИЛИ         */
+/* ============================== */
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background-color: #f5f5f5; /* Светло-серый фон */
+    background-color: #f5f5f5;
     margin: 0;
-    padding: 20px;
 }
 
-header {
-    margin-bottom: 40px;
-    text-align: center;
+/* ============================== */
+/*          ШАПКА САЙТА           */
+/* ============================== */
+.site-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    max-width: 1200px;
+    margin: 0 auto 30px;
+    padding: 15px 25px;
+    background: linear-gradient(135deg, #1E40AF, #2563EB);
+    color: white;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+    position: relative;
+    overflow: hidden;
 }
 
-/* --- СЕТКА (GRID) --- */
+/* Декоративный градиент */
+.site-header::after {
+    content: '';
+    position: absolute;
+    top: -40px;
+    right: -60px;
+    width: 180px;
+    height: 180px;
+    background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.35), rgba(255,255,255,0));
+    opacity: 0.8;
+}
+
+/* Логотип и название */
+.logo-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+.logo-img {
+    width: 40px;
+    height: 40px;
+    object-fit: contain;
+    border-radius: 6px;
+}
+.site-title {
+    margin: 0;
+    font-size: 1.4rem;
+    font-weight: 600;
+}
+
+/* Ссылка "о нас" */
+.about-link {
+    color: white;
+    text-decoration: none;
+    font-size: 0.95rem;
+    padding: 6px 12px;
+    border-radius: 6px;
+    transition: background 0.2s;
+}
+.about-link:hover {
+    background: rgba(255,255,255,0.2);
+}
+
+/* ============================== */
+/*       ГЛАВНАЯ ПЛАШКА          */
+/* ============================== */
+.main-header {
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 24px;
+    background: #161b22;
+    color: white;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+}
+
+.header-left {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.logo {
+    width: 34px;
+    height: 34px;
+    border-radius: 6px;
+}
+
+.logo-text {
+    font-size: 1.2rem;
+    font-weight: 600;
+}
+
+.header-nav {
+    display: flex;
+    gap: 25px;
+}
+
+.header-nav a {
+    color: #c9d1d9;
+    text-decoration: none;
+    font-size: 0.95rem;
+    transition: color 0.2s;
+}
+
+.header-nav a:hover {
+    color: white;
+}
+
+/* Кнопка загрузки */
+.upload-btn {
+    background: #238636;
+    color: white;
+    padding: 7px 14px;
+    border-radius: 6px;
+    text-decoration: none;
+    font-size: 0.9rem;
+    transition: background 0.2s;
+}
+
+.upload-btn:hover {
+    background: #2ea043;
+}
+
+/* ============================== */
+/*            СЕТКА               */
+/* ============================== */
 .gallery-grid {
     display: grid;
-    /* Это магическая строка адаптивности:
-    Создавай столько колонок, сколько влезет (auto-fill).
-    Минимальная ширина колонки 280px.
-    Если места много - растягивай их (1fr). */
     grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: 30px; /* Расстояние между карточками */
+    gap: 30px;
     max-width: 1200px;
     margin: 0 auto;
 }
 
-/* --- КАРТОЧКА (CARD) --- */
+/* ============================== */
+/*           КАРТОЧКА             */
+/* ============================== */
 .asset-card {
     background: white;
     border-radius: 12px;
-    overflow: hidden; /* Чтобы содержимое не вылезало за скругленные углы */
-    box-shadow: 0 4px 6px rgba(0,0,0,0.1); /* Легкая тень */
+    overflow: hidden;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
     transition: transform 0.2s;
 }
 
 .asset-card:hover {
-    transform: translateY(-5px); /* При наведении карточка чуть взлетает */
+    transform: translateY(-5px);
 }
 
-/* Место для будущего 3D-вьювера или скриншота */
 .card-preview {
     height: 200px;
     display: flex;
@@ -46,16 +166,38 @@ header {
     position: relative;
     overflow: hidden;
     background: radial-gradient(circle, #ffffff, #e0e0e0);
+    background-size: cover;
+    background-position: center;
+    cursor: pointer;
+}
+
+.card-preview:hover::after {
+    pointer-events: none;
+}
+
+
+.play-btn {
+    pointer-events: none;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 60px;
+    height: 60px;
+    background: rgba(0, 0, 0, 0.6);
+    border-radius: 50%;
+    border: 2px solid white;
+    color: white;
+    font-size: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.2s, background 0.2s;
+    z-index: 5;
 }
 
 .card-info {
     padding: 20px;
-}
-
-.card-title {
-    margin: 0 0 10px 0;
-    font-size: 1.2rem;
-    color: #333;
 }
 
 .card-meta {
@@ -64,7 +206,18 @@ header {
     margin-bottom: 15px;
 }
 
-/* Кнопка */
+.card-title {
+    margin: 0 0 10px 0;
+    font-size: 1.2rem;
+    color: #333;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* ============================== */
+/*             КНОПКИ             */
+/* ============================== */
 .btn {
     display: inline-block;
     text-decoration: none;
@@ -73,92 +226,57 @@ header {
     padding: 8px 16px;
     border-radius: 6px;
     font-size: 0.9rem;
+    transition: background-color 0.2s, transform 0.2s;
 }
 
 .btn:hover {
     background-color: #0056b3;
+    transform: translateY(-1px);
 }
 
-
-/* Делаем контейнер relative, чтобы позиционировать кнопку Play по центру */
-.card-preview {
-position: relative;
-cursor: pointer;
-background-size: cover;
-background-position: center;
-}
-/* Сам экран загрузки (поверх 3D) */
+/* ============================== */
+/*          ЗАГРУЗКА              */
+/* ============================== */
 .loader-overlay {
-position: absolute;
-top: 0; left: 0; right: 0; bottom: 0;
-background: rgba(255, 255, 255, 0.9); /* Полупрозрачный белый */
-display: flex;
-flex-direction: column;
-align-items: center;
-justify-content: center;
-z-index: 10;
-transition: opacity 0.3s; /* Плавное исчезновение */
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(255, 255, 255, 0.9);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    z-index: 10;
+    transition: opacity 0.3s;
 }
-/* Полоска прогресса (фон) */
+
 .progress-bar {
-width: 60%;
-height: 6px;
-background: #e0e0e0;
-border-radius: 3px;
-overflow: hidden;
-margin-top: 10px;
+    width: 60%;
+    height: 6px;
+    background: #e0e0e0;
+    border-radius: 3px;
+    overflow: hidden;
+    margin-top: 10px;
 }
-/* Полоска прогресса (заполнение) */
+
 .progress-fill {
-width: 0%; /* Будем менять это через JS */
-height: 100%;
-background-color: #007bff; /* Синий цвет */
-transition: width 0.1s;
+    width: 0%;
+    height: 100%;
+    background-color: #007bff;
+    transition: width 0.1s;
 }
+
 .error-msg {
-color: #dc3545;
-text-align: center;
-padding: 20px;
+    color: #dc3545;
+    text-align: center;
+    padding: 20px;
 }
 
-
-/* Затемнение картинки при наведении */
-.card-preview:hover::after {
-content: '';
-position: relative;
-top: 0; left: 0; right: 0; bottom: 0;
-background: rgba(0,0,0,0.1);
-}
-
-/* Кнопка Play */
-.play-btn {
-position: absolute;
-top: 50%;
-left: 50%;
-transform: translate(-50%, -50%); /* Точная центровка */
-width: 60px;
-height: 60px;
-background: rgba(0, 0, 0, 0.6);
-border-radius: 50%;
-border: 2px solid white;
-color: white;
-font-size: 24px;
-display: flex;
-align-items: center;
-justify-content: center;
-transition: transform 0.2s, background 0.2s;
-z-index: 5; /* Чтобы была поверх картинки */
-}
-
-/* Эффект нажатия */
-.card-preview:hover .play-btn {
-background: rgba(0, 123, 255, 0.8); /* Синий при наведении */
-transform: translate(-50%, -50%) scale(1.1);
-}
-/* ===============================
-   ПАНЕЛЬ ПОИСКА И СОРТИРОВКИ
-================================ */
-
+/* ============================== */
+/*          ПАНЕЛЬ ПОИСКА        */
+/* ============================== */
 .toolbar {
     background: white;
     padding: 20px;
@@ -207,7 +325,10 @@ transform: translate(-50%, -50%) scale(1.1);
     text-decoration: none;
     font-size: 0.9rem;
 }
-/* ===== ПАГИНАЦИЯ ===== */
+
+/* ============================== */
+/*           ПАГИНАЦИЯ            */
+/* ============================== */
 .pagination {
     margin-top: 40px;
     text-align: center;
@@ -234,7 +355,9 @@ transform: translate(-50%, -50%) scale(1.1);
     margin: 0 10px;
 }
 
-/* ===== УВЕДОМЛЕНИЯ ===== */
+/* ============================== */
+/*          УВЕДОМЛЕНИЯ           */
+/* ============================== */
 .messages-container {
     position: fixed;
     top: 20px;
@@ -252,20 +375,154 @@ transform: translate(-50%, -50%) scale(1.1);
     animation: slideIn 0.5s ease-out;
 }
 
-.alert.success { background-color: #28a745; }
-.alert.error { background-color: #dc3545; }
-.alert.warning { background-color: #ffc107; color: black; }
+.alert.success {
+    background-color: #28a745;
+}
+
+.alert.error {
+    background-color: #dc3545;
+}
+
+.alert.warning {
+    background-color: #ffc107;
+    color: black;
+}
 
 @keyframes slideIn {
     from { transform: translateX(100%); opacity: 0; }
     to { transform: translateX(0); opacity: 1; }
 }
 
-/* ===== ОБРЕЗКА ДЛИННЫХ НАЗВАНИЙ ===== */
-.card-title {
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+
+.fullscreen-btn {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    width: 30px;
+    height: 30px;
+    background: rgba(0,0,0,0.6);
+    color: white;
+    font-size: 18px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 10;
+    transition: background 0.2s;
+}
+.fullscreen-btn:hover {
+    background: rgba(0,0,0,0.8);
+}
+.fullscreen-overlay {
+    position: fixed;
+    top:0;
+    left:0;
+    right:0;
+    bottom:0;
+    background: rgba(0,0,0,0.95);
+    z-index:9999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.fullscreen-overlay .close-btn {
+    position: absolute;
+    top:10px;
+    right:10px;
+    font-size:24px;
+    color:#fff;
+    cursor:pointer;
+    z-index:10;
 }
 
 
+
+/* ============================== */
+/*          СТРАНИЦА ЗАГРУЗКИ     */
+/* ============================== */
+
+.upload-wrapper{
+    max-width:700px;
+    margin:60px auto;
+}
+
+.upload-card{
+    background:white;
+    padding:35px;
+    border-radius:12px;
+    box-shadow:0 6px 18px rgba(0,0,0,0.12);
+}
+
+.upload-title{
+    margin-top:0;
+    margin-bottom:25px;
+    text-align:center;
+}
+
+.form-group{
+    margin-bottom:20px;
+}
+
+.form-group label{
+    display:block;
+    margin-bottom:6px;
+    font-weight:600;
+}
+
+.form-group input{
+    width:100%;
+    padding:10px;
+    border:1px solid #ddd;
+    border-radius:6px;
+}
+
+#preview-container{
+    width:100%;
+    height:260px;
+    background:#f0f0f0;
+    border-radius:10px;
+    border:2px dashed #ccc;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    margin-bottom:20px;
+    position:relative;
+}
+
+#preview-container span{
+    color:#888;
+}
+
+.upload-btn-submit{
+    width:100%;
+    padding:12px;
+    font-size:1rem;
+    background:#238636;
+    border:none;
+    color:white;
+    border-radius:8px;
+    cursor:pointer;
+    transition:0.2s;
+}
+
+.upload-btn-submit:hover{
+    background:#2ea043;
+}
+
+.upload-btn-submit:disabled{
+    background:#aaa;
+    cursor:not-allowed;
+}
+
+.back-link{
+    display:block;
+    margin-top:20px;
+    text-align:center;
+    text-decoration:none;
+    color:#555;
+}
+
+.back-link:hover{
+    text-decoration:underline;
+}

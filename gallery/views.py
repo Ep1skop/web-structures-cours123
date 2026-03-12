@@ -1,14 +1,24 @@
 import base64
 from django.core.files.base import ContentFile
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.db.models import Q
 from django.utils import timezone
 from datetime import timedelta
 from django.core.paginator import Paginator
 from django.contrib import messages
-
+from django.http import FileResponse
 from .models import Asset
 from .forms import AssetForm
+
+
+def download_asset(request, asset_id):
+    asset = get_object_or_404(Asset, id=asset_id)
+
+    # увеличиваем счётчик
+    asset.downloads += 1
+    asset.save(update_fields=["downloads"])
+
+    return FileResponse(asset.file.open("rb"), as_attachment=True)
 
 
 def home(request):
@@ -43,7 +53,7 @@ def home(request):
         assets = assets.order_by('-created_at')
 
     # ====== ПАГИНАЦИЯ ======
-    paginator = Paginator(assets, 3)  # 8 моделей на страницу
+    paginator = Paginator(assets, 6)  # 8 моделей на страницу
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
 
@@ -76,8 +86,7 @@ def upload(request):
 
             new_asset.save()
 
-            # ====== MESSAGE ======
-            messages.success(request, f'Модель "{new_asset.title}" успешно загружена!')
+            
 
             return redirect('home')
     else:

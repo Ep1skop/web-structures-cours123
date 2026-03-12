@@ -8,6 +8,7 @@ class Asset(models.Model):
     image = models.ImageField(upload_to='thumbnails/', blank=True, null=True, 
     verbose_name="Превью")
     created_at = models.DateTimeField(auto_now_add=True, verbose_name="Дата загрузки")
+    downloads = models.PositiveIntegerField(default=0, verbose_name="Скачивания")
     def __str__(self):
         return self.title
     

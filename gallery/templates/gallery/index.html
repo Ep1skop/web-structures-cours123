@@ -5,7 +5,7 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>3D Storage</title>
+    <title>PooPeePee</title>
 
     <script type="importmap">
     {
@@ -32,12 +32,25 @@
 </div>
 {% endif %}
 
-<header>
-    <h1>{{ page_title }}</h1>
+<header class="main-header">
 
-    <a href="{% url 'upload' %}" class="btn" style="background-color:#28a745;">
-        + Загрузить модель
-    </a>
+    <!-- Логотип + название -->
+    <div class="header-left">
+        <img src="{% static 'gallery/Screenshot_2.jpg' %}" alt="Логотип" class="logo">
+        <span class="logo-text">SibSutiZ 3D </span>
+    </div>
+
+    <!-- Навигация -->
+    <nav class="header-nav">
+        <a href="https://sibsutis.ru">Галерея</a>
+        <a href="{% url 'about' %}">О нас</a>
+    </nav>
+
+    <!-- Кнопка Upload -->
+    <div class="header-right">
+        <a href="{% url 'upload' %}" class="upload-btn">Загрузить</a>
+    </div>
+
 </header>
 
 <!-- ===== Панель поиска ===== -->
@@ -45,145 +58,169 @@
     <form action="{% url 'home' %}" method="get"
           style="display:flex; width:100%; gap:10px; align-items:center;">
 
-        <input type="text"
-               name="q"
-               class="search-input"
-               placeholder="Найти 3D модель..."
-               value="{{ request.GET.q|default:'' }}">
+        <input
+            type="text"
+            name="q"
+            class="search-input"
+            placeholder="Найти 3D модель..."
+            value="{{ request.GET.q|default:'' }}"
+        >
 
-        <select name="ordering"
-                class="sort-select"
-                onchange="this.form.submit()">
-
+        <select name="ordering" class="sort-select" onchange="this.form.submit()">
             <option value="new"
-                {% if request.GET.ordering == 'new' or not request.GET.ordering %}selected{% endif %}>
+                {% if request.GET.ordering == 'new' or not request.GET.ordering %}
+                    selected
+                {% endif %}
+            >
                 Сначала новые
             </option>
 
             <option value="old"
-                {% if request.GET.ordering == 'old' %}selected{% endif %}>
+                {% if request.GET.ordering == 'old' %}
+                    selected
+                {% endif %}
+            >
                 Сначала старые
             </option>
 
             <option value="today"
-                {% if request.GET.ordering == 'today' %}selected{% endif %}>
+                {% if request.GET.ordering == 'today' %}
+                    selected
+                {% endif %}
+            >
                 Только за сегодня
             </option>
         </select>
 
-        <button type="submit" class="search-btn">Найти</button>
+        <button type="submit" class="search-btn">
+            Найти
+        </button>
 
         {% if request.GET.q or request.GET.ordering %}
-            <a href="{% url 'home' %}" class="reset-link">✖ Сбросить</a>
+            <a href="{% url 'home' %}" class="reset-link">
+                ✖ Сбросить
+            </a>
         {% endif %}
     </form>
 </div>
 
 <main>
-    <div class="gallery-grid">
 
-        {% for asset in page_obj %}
-            <div class="asset-card">
+<div class="gallery-grid">
 
-                {% if asset.file %}
-                    <div class="card-preview js-load-3d"
-                         id="model-container-{{ asset.id }}"
-                         data-url="{{ asset.file.url }}"
-                         {% if asset.image %}
-                         style="background-image:url('{{ asset.image.url }}');"
-                         {% endif %}>
-                        {% if asset.image %}
-                            <div class="play-btn">▶</div>
-                        {% else %}
-                            <span style="font-size:2rem;">🎲</span>
-                        {% endif %}
-                    </div>
-                {% else %}
-                    <div class="card-preview">❌</div>
-                {% endif %}
+{% for asset in page_obj %}
+<div class="asset-card">
 
-                <div class="card-info">
-                    <h3 class="card-title">{{ asset.title }}</h3>
+{% if asset.file %}
+<div
+    class="card-preview js-load-3d"
+    id="model-container-{{ asset.id }}"
+    data-url="{{ asset.file.url }}"
+    {% if asset.image %} style="background-image:url('{{ asset.image.url }}');" {% endif %}
+>
+    {% if asset.image %}
+        <div class="play-btn">▶</div>
+    {% else %}
+        <span style="font-size:2rem;">🎲</span>
+    {% endif %}
 
-                    <div class="card-meta">
-                        <span>📅 {{ asset.created_at|date:"d M Y" }}</span>
-                        {% if asset.file %}
-                            <span style="float:right;">
-                                💾 {{ asset.file.size|filesizeformat }}
-                            </span>
-                        {% endif %}
-                    </div>
+    {% if asset.file %}
+    <div class="fullscreen-btn" title="Открыть на весь экран">⤢</div>
+    {% endif %}
+</div>
+{% else %}
+<div class="card-preview">
+    ❌
+</div>
+{% endif %}
 
-                    {% if asset.file %}
-                        <a href="{{ asset.file.url }}" class="btn" download>
-                            Скачать .glb
-                        </a>
-                    {% else %}
-                        <span style="color:red;">Файл потерян</span>
-                    {% endif %}
-                </div>
+<div class="card-info">
 
-            </div>
+<h3 class="card-title">
+    {{ asset.title }}
+</h3>
 
-        {% empty %}
-            <div style="grid-column:1 / -1; text-align:center; padding:40px;">
-                {% if request.GET.q %}
-                    <h3>
-                        По запросу "<b>{{ request.GET.q }}</b>" ничего не найдено 🕵️‍♂️
-                    </h3>
-                {% else %}
-                    <h3>База пуста</h3>
-                    <p>Загрузите первую модель!</p>
-                {% endif %}
-            </div>
-        {% endfor %}
+<div class="card-meta">
 
-    </div>
+<span>📅 {{ asset.created_at|date:"d M Y" }}</span>
 
-    <!-- ===== ПАГИНАЦИЯ ===== -->
-    <div class="pagination">
-        <span class="step-links">
+<span style="float:right;">
+💾 {{ asset.file.size|filesizeformat }}
+</span>
 
-            {% if page_obj.has_previous %}
-                <a href="?{% param_replace request page=1 %}">&laquo; Первая</a>
-                <a href="?{% param_replace request page=page_obj.previous_page_number %}">Назад</a>
-            {% endif %}
+<br>
 
-            <span class="current">
-                Страница {{ page_obj.number }} из {{ page_obj.paginator.num_pages }}
-            </span>
+<span>⬇ {{ asset.downloads }} скачиваний</span>
 
-            {% if page_obj.has_next %}
-                <a href="?{% param_replace request page=page_obj.next_page_number %}">Далее</a>
-                <a href="?{% param_replace request page=page_obj.paginator.num_pages %}">Последняя &raquo;</a>
-            {% endif %}
+</div>
 
-        </span>
-    </div>
+{% if asset.file %}
+<a href="{% url 'download_asset' asset.id %}" class="btn">
+    Скачать .glb
+</a>
+{% else %}
+<span style="color:red;">
+    Файл потерян
+</span>
+{% endif %}
+
+</div>
+</div>
+{% empty %}
+
+<div style="grid-column:1 / -1; text-align:center; padding:40px;">
+
+{% if request.GET.q %}
+<h3>
+По запросу "<b>{{ request.GET.q }}</b>" ничего не найдено 🕵️‍♂️
+</h3>
+{% else %}
+<h3>База пуста</h3>
+<p>Загрузите первую модель!</p>
+{% endif %}
+
+</div>
+
+{% endfor %}
+
+</div>
+
+<!-- ===== ПАГИНАЦИЯ ===== -->
+<div class="pagination">
+<span class="step-links">
+
+{% if page_obj.has_previous %}
+<a href="?{% param_replace request page=1 %}">&laquo; Первая</a>
+<a href="?{% param_replace request page=page_obj.previous_page_number %}">
+Назад
+</a>
+{% endif %}
+
+<span class="current">
+Страница {{ page_obj.number }} из {{ page_obj.paginator.num_pages }}
+</span>
+
+{% if page_obj.has_next %}
+<a href="?{% param_replace request page=page_obj.next_page_number %}">
+Далее
+</a>
+<a href="?{% param_replace request page=page_obj.paginator.num_pages %}">
+Последняя &raquo;
+</a>
+{% endif %}
+
+</span>
+</div>
 
 </main>
 
 <script type="module">
-    import { loadModel } from "{% static 'gallery/js/viewer.js' %}";
 
-    document.querySelectorAll('.js-load-3d').forEach(container => {
-    container.addEventListener('click', function () {
+import { loadModel } from "{% static 'gallery/js/viewer.js' %}";
 
-        if (this.querySelector('canvas')) return;
 
-        // УБИРАЕМ ФОНОВУЮ КАРТИНКУ
-        this.style.backgroundImage = 'none';
-        this.style.background = '#ffffff';
-
-        // очищаем кнопку play
-        this.innerHTML = '';
-
-        // загружаем модель
-        loadModel(this.id, this.dataset.url);
-    });
-});
 
 </script>
-
 </body>
+
 </html>
